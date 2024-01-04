@@ -2,11 +2,20 @@ import express from "express";
 import dotenv from "dotenv";
 import xssFilters from "xss-filters";
 import stopwords from "stopword";
+import OpenAI from "openai";
 
 dotenv.config();
 
 const app = express();
+
 const port = process.env.PORT || 3000;
+const apiKey = process.env.OPENAI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("No API key provided");
+}
+
+const openai = new OpenAI({ apiKey });
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -44,14 +53,31 @@ function processQuery(query) {
   return processedQuery;
 }
 
-app.post("/search", (req, res) => {
+async function getEmbeddings(text) {
+  try {
+    const response = await openai.embeddings.create({
+      model: "text-embedding-ada-002",
+      input: text,
+    });
+
+    console.log(response.data[0].embedding);
+    return response.data[0].embedding;
+  } catch (error) {
+    console.error("Error in getting embeddings: ", error);
+    return null;
+  }
+}
+
+app.post("/search", async (req, res) => {
   const userQuery = req.body.search.toLowerCase();
 
   const validatedQuery = validateQuery(userQuery);
   const processedData = processQuery(validatedQuery);
 
+  const embeddings = await getEmbeddings(processedData);
+
   res.send(`
-    <p class="px-4 py-2 bg-gray-800 text-white">${processedData}</p>
+    <p class="px-4 py-2 bg-gray-800 text-white">${embeddings}</p>
   `);
 });
 
