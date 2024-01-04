@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.10"
+      integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Similar Songs</title>
+  </head>
+  <body class="bg-blue-900">
+    <div class="container mx-auto py-8 max-w-lg">
+      <form
+        class="bg-gray-900 text-white p-4 border border-gray-600 rounded-lg max-w-lg m-auto"
+        hx-trigger="submit"
+        hx-post="/search"
+        hx-target="#search-results"
+      >
+        <label class="text-2xl text-center" for="search">
+          Describe the sound you're looking for
+        </label>
+        <input
+          class="border border-gray-600 bg-gray-800 p-2 rounded-lg w-full"
+          type="search"
+          id="search"
+          name="search"
+          placeholder="Alternative rock inspired by Paramore..."
+          required
+        />
+        <span class="text-gray-400 text-center text-sm"
+          >(maximum 140 characters)</span
+        >
+        <button
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded-lg w-full"
+          type="submit"
+          id="search-button"
+        >
+          Search
+        </button>
+      </form>
+      <!-- hx-indicator="#loading" -->
+      <div id="search-results" class="container mx-auto py-8 max-w-lg">
+        <!-- Your search results go here -->
+      </div>
+    </div>
+  </body>
+</html>

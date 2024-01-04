@@ -1,0 +1,20 @@
+{
+  "name": "similar-songs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "openai": "^4.24.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
