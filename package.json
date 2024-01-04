@@ -12,7 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
-    "openai": "^4.24.1"
+    "openai": "^4.24.1",
+    "stopword": "^3.0.1",
+    "xss-filters": "^1.2.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

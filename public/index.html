@@ -19,18 +19,19 @@
         hx-post="/search"
         hx-target="#search-results"
       >
-        <label class="text-2xl text-center" for="search">
+        <label class="text-2xl text-center block pb-2" for="search">
           Describe the sound you're looking for
         </label>
         <input
-          class="border border-gray-600 bg-gray-800 p-2 rounded-lg w-full"
+          class="border border-gray-600 bg-gray-800 p-2 mt-2 rounded-lg w-full"
           type="search"
           id="search"
           name="search"
           placeholder="Alternative rock inspired by Paramore..."
+          maxlength="140"
           required
         />
-        <span class="text-gray-400 text-center text-sm"
+        <span class="text-gray-400 mt-1 text-right text-sm block"
           >(maximum 140 characters)</span
         >
         <button
@@ -41,7 +42,6 @@
           Search
         </button>
       </form>
-      <!-- hx-indicator="#loading" -->
       <div id="search-results" class="container mx-auto py-8 max-w-lg">
         <!-- Your search results go here -->
       </div>
