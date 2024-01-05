@@ -11,8 +11,6 @@ const app = express();
 
 const port = process.env.PORT || 3000;
 
-const MAXIMUM_SUITABILITY_DISTANCE = 20;
-
 const noSuitableSongFoundResponse = `<p class="px-4 py-2 bg-gray-800 text-white">No song found</p>`;
 
 app.use(express.static("public"));
@@ -33,12 +31,14 @@ app.post("/search", async (req, res) => {
 
   const mostSuitableSong = await getMostSuitableSong(queryEmbeddings);
 
-  if (!mostSuitableSong) {
+  if (!mostSuitableSong.id) {
     res.send(noSuitableSongFoundResponse);
     return;
   }
 
-  if (mostSuitableSong.distance > MAXIMUM_SUITABILITY_DISTANCE) {
+  console.log("Similarity:", mostSuitableSong.similarity);
+
+  if (mostSuitableSong.similarity < 0.5) {
     res.send(noSuitableSongFoundResponse);
     return;
   }

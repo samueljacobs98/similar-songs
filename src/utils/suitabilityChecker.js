@@ -1,30 +1,35 @@
-import { songEmbeddings } from "../services/embeddingService";
+import { embeddings as songEmbeddings } from "../data/songLibraryEmbeddingsData.js";
 
-async function getMostSuitableSong(embeddings) {
-  try {
-    const songEmbeddingsWithDistance = songEmbeddings.map((song) => {
-      const distance = embeddings.reduce((total, embedding, index) => {
-        return total + Math.abs(embedding - song.embedding[index]);
-      }, 0);
+const cosineSimilarity = (a, b) => {
+  const dotProduct = a.reduce((total, num, index) => {
+    return total + num * b[index];
+  }, 0);
 
-      return {
-        id: song.id,
-        title: song.title,
-        distance,
-      };
-    });
+  const magnitudeA = Math.sqrt(a.reduce((total, num) => total + num ** 2, 0));
+  const magnitudeB = Math.sqrt(b.reduce((total, num) => total + num ** 2, 0));
 
-    const sortedSongs = songEmbeddingsWithDistance.sort(
-      (a, b) => a.distance - b.distance
-    );
+  return dotProduct / (magnitudeA * magnitudeB);
+};
 
-    const mostSuitableSong = sortedSongs[0];
+async function getMostSuitableSong(queryEmbeddings) {
+  const mostSuitableSong = songEmbeddings.reduce(
+    (mostSuitableSoFar, song) => {
+      const similarity = cosineSimilarity(queryEmbeddings, song.embedding);
 
-    return mostSuitableSong;
-  } catch (error) {
-    console.error("Error in getting most suitable song: ", error);
-    return null;
-  }
+      if (similarity > mostSuitableSoFar.similarity) {
+        return {
+          id: song.id,
+          title: song.title,
+          similarity,
+        };
+      }
+
+      return mostSuitableSoFar;
+    },
+    { id: null, title: null, similarity: 0 }
+  );
+
+  return mostSuitableSong;
 }
 
 export { getMostSuitableSong };

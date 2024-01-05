@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import OpenAI from "openai";
-import songs from "../../public/embeddings/embeddings.json" assert { type: "json" };
 
 dotenv.config();
 
@@ -26,12 +25,4 @@ async function getEmbeddings(text) {
   }
 }
 
-const songEmbeddings = songs.map((song) => {
-  return {
-    id: song.id,
-    title: song.title,
-    embedding: song.embedding,
-  };
-});
-
-export { getEmbeddings, songEmbeddings };
+export { getEmbeddings };

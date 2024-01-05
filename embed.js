@@ -4,11 +4,11 @@
  * The results should be saved in a JSON file.
  */
 
-import songJson from "./public/songs/songs.json" assert { type: "json" };
+import songLibraryData from "./src/data/songLibraryData.json" assert { type: "json" };
 import { getEmbeddings } from "./src/services/embeddingService.js";
 import fs from "fs";
 
-const songs = songJson.songs;
+const songs = songLibraryData.songs;
 
 async function createEmbeddings(songs) {
   const embeddings = await Promise.all(
@@ -34,10 +34,7 @@ async function main() {
 
   console.log(embeddings);
 
-  fs.writeFileSync(
-    "./public/embeddings/embeddings.json",
-    JSON.stringify(embeddings)
-  );
+  fs.writeFileSync("./src/data/newEmbeddings.json", JSON.stringify(embeddings));
 }
 
 main();
