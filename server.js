@@ -1,9 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 import { getEmbeddings } from "./src/services/embeddingService.js";
 import { validateQuery } from "./src/utils/validator.js";
 import { parseQuery } from "./src/utils/parser.js";
 import { getMostSuitableSong } from "./src/utils/suitabilityChecker.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 
@@ -43,11 +48,33 @@ app.post("/search", async (req, res) => {
     return;
   }
 
+  const { id, title } = mostSuitableSong;
+
   res.send(`
-      <div class="px-4 py-2 bg-gray-800 text-white">
-        <p>Most suitable song is "${mostSuitableSong.title}" (ID: ${mostSuitableSong.id})</p>
+    <div class="flex flex-col items-center px-4 py-2 bg-gray-800 text-white">
+      <audio id="audio-player" src="/stream/${id}/${title}" controls></audio>
       </div>
-    `);
+  `);
+});
+
+app.get("/stream/:id/:title", (req, res) => {
+  const { id, title } = req.params;
+
+  if (!id || !title) {
+    res.status(400).send("Bad request");
+    return;
+  }
+
+  const filePath = path.join(__dirname, `./public/songs/${id}-${title}.mp3`);
+  const stat = fs.statSync(filePath);
+
+  res.writeHead(200, {
+    "Content-Type": "audio/mpeg",
+    "Content-Length": stat.size,
+  });
+
+  const readStream = fs.createReadStream(filePath);
+  readStream.pipe(res);
 });
 
 app.listen(port, () => {

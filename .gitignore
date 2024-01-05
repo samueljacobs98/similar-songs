@@ -20,3 +20,6 @@ Thumbs.db
 
 # Ignore npm lock file
 package-lock.json
+
+# Ignore song mp3 files
+public/songs/*.mp3
