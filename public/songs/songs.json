@@ -1,0 +1,82 @@
+{
+  "songs": [
+    {
+      "id": 1,
+      "title": "human",
+      "genres": ["rock", "american rock", "alternative rock"],
+      "inspirations": ["paramore", "foo fighters", "my chemical romance"]
+    },
+    {
+      "id": 2,
+      "title": "softer",
+      "genres": ["dream pop", "indie"],
+      "inspirations": ["men i trust", "mac demarco", "the japanese house"]
+    },
+    {
+      "id": 3,
+      "title": "family intervention",
+      "genres": ["indie, rock"],
+      "inspirations": ["the strokes"]
+    },
+    {
+      "id": 4,
+      "title": "eden",
+      "genres": ["pop", "dance"],
+      "inspirations": ["ellie goulding", "becky hill"]
+    },
+    {
+      "id": 5,
+      "title": "thrills",
+      "genres": ["r&b", "pop"],
+      "inspirations": ["corrine bailey ray", "h.e.r."]
+    },
+    {
+      "id": 6,
+      "title": "pray4u",
+      "genres": ["pop", "afrobeat", "r&b"],
+      "inspirations": ["craig david"]
+    },
+    {
+      "id": 7,
+      "title": "fire",
+      "genres": ["ballad", "pop"],
+      "inspirations": ["mimi webb"]
+    },
+    {
+      "id": 8,
+      "title": "afterglow",
+      "genres": ["r&b", "pop"],
+      "inspirations": ["frank ocean"]
+    },
+    {
+      "id": 9,
+      "title": "solo",
+      "genres": ["uk garage"],
+      "inspirations": []
+    },
+    {
+      "id": 10,
+      "title": "ocean",
+      "genres": ["dark pop"],
+      "inspirations": ["billie eilish", "jorja smith"]
+    },
+    {
+      "id": 11,
+      "title": "message",
+      "genres": ["neo soul"],
+      "inspirations": ["d'angelo"]
+    },
+    {
+      "id": 12,
+      "title": "it goes on for miles",
+      "genres": ["acoustic"],
+      "inspirations": []
+    },
+    {
+      "id": 13,
+      "title": "lesson learned",
+      "genres": ["hip hop"],
+      "inspirations": ["anderson paak"]
+    }
+  ]
+}

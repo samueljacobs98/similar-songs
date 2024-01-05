@@ -1,84 +1,53 @@
 import express from "express";
 import dotenv from "dotenv";
-import xssFilters from "xss-filters";
-import stopwords from "stopword";
-import OpenAI from "openai";
+import { getEmbeddings } from "./src/services/embeddingService.js";
+import { validateQuery } from "./src/utils/validator.js";
+import { parseQuery } from "./src/utils/parser.js";
+import { getMostSuitableSong } from "./src/utils/suitabilityChecker.js";
 
 dotenv.config();
 
 const app = express();
 
 const port = process.env.PORT || 3000;
-const apiKey = process.env.OPENAI_API_KEY;
 
-if (!apiKey) {
-  throw new Error("No API key provided");
-}
+const MAXIMUM_SUITABILITY_DISTANCE = 20;
 
-const openai = new OpenAI({ apiKey });
+const noSuitableSongFoundResponse = `<p class="px-4 py-2 bg-gray-800 text-white">No song found</p>`;
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.sendFile("index.html");
 });
-
-function validateQuery(query) {
-  if (query.length >= 140) {
-    throw new Error("Query too long");
-  }
-
-  if (typeof query !== "string") {
-    throw new Error("Query must be a string");
-  }
-
-  const sanitisedQuery = xssFilters.inHTMLData(query);
-
-  return sanitisedQuery;
-}
-
-function processQuery(query) {
-  const withoutPunctuation = query
-    .replace(/[^a-zA-Z0-9]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const words = withoutPunctuation.split(" ");
-  const withoutStopwords = stopwords.removeStopwords(words);
-  const withoutDuplicates = [...new Set(withoutStopwords)];
-  const processedQuery = withoutDuplicates.join(" ");
-
-  return processedQuery;
-}
-
-async function getEmbeddings(text) {
-  try {
-    const response = await openai.embeddings.create({
-      model: "text-embedding-ada-002",
-      input: text,
-    });
-
-    console.log(response.data[0].embedding);
-    return response.data[0].embedding;
-  } catch (error) {
-    console.error("Error in getting embeddings: ", error);
-    return null;
-  }
-}
 
 app.post("/search", async (req, res) => {
   const userQuery = req.body.search.toLowerCase();
 
   const validatedQuery = validateQuery(userQuery);
-  const processedData = processQuery(validatedQuery);
+  const parsedQuery = parseQuery(validatedQuery);
 
-  const embeddings = await getEmbeddings(processedData);
+  const queryEmbeddings = await getEmbeddings(parsedQuery);
+
+  const mostSuitableSong = await getMostSuitableSong(queryEmbeddings);
+
+  if (!mostSuitableSong) {
+    res.send(noSuitableSongFoundResponse);
+    return;
+  }
+
+  if (mostSuitableSong.distance > MAXIMUM_SUITABILITY_DISTANCE) {
+    res.send(noSuitableSongFoundResponse);
+    return;
+  }
 
   res.send(`
-    <p class="px-4 py-2 bg-gray-800 text-white">${embeddings}</p>
-  `);
+      <div class="px-4 py-2 bg-gray-800 text-white">
+        <p>Most suitable song is "${mostSuitableSong.title}" (ID: ${mostSuitableSong.id})</p>
+      </div>
+    `);
 });
 
 app.listen(port, () => {
