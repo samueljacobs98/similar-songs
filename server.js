@@ -50,10 +50,13 @@ app.post("/search", async (req, res) => {
 
   const { id, title } = mostSuitableSong;
 
+  const formattedTitle = title.replace(/ /g, "-").toLowerCase();
+
   res.send(`
     <div class="flex flex-col items-center px-4 py-2 bg-gray-800 text-white">
-      <audio id="audio-player" src="/stream/${id}/${title}" controls></audio>
-      </div>
+      <h3 class="text-xl font-bold">${title}</h3>
+      <audio id="audio-player" src="/stream/${id}/${formattedTitle}" controls></audio>
+    </div>
   `);
 });
 

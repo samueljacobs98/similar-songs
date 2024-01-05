@@ -23,3 +23,4 @@ package-lock.json
 
 # Ignore song mp3 files
 public/songs/*.mp3
+public/songs/*.wav
